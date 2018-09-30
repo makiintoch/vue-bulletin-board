@@ -29,7 +29,7 @@
       ></v-toolbar-side-icon>
       <v-toolbar-title>
         <v-icon>widgets</v-icon> 
-        AdBoard
+        <router-link to="/" tag="span" class="pointer">AdBoard</router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
@@ -66,3 +66,9 @@ export default {
   }
 }
 </script>
+
+<style>
+  .pointer {
+    cursor: pointer;
+  }
+</style>
