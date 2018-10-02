@@ -37,16 +37,16 @@ export default {
     }
   },
   getters: {
-    getAllAds (state) {
+    allAds (state) {
       return state.ads
     },
-    getAllPromoAds (state) {
+    allPromoAds (state) {
       return state.ads.filter(item => item.promo)
     },
-    getMyAds (state) {
+    myAds (state) {
       return state.ads
     },
-    getAdById (state) {
+    adById (state) {
       return adId => state.ads.find(item => item.id === adId)
     }
   }

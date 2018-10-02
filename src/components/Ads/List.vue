@@ -41,7 +41,7 @@
 export default {
   computed: {
     ads () {
-      return this.$store.getters.getMyAds
+      return this.$store.getters.myAds
     }
   }
 }

@@ -55,10 +55,10 @@
 export default {
   computed: {
     ads () {
-      return this.$store.getters.getAllAds
+      return this.$store.getters.allAds
     },
     promoAds () {
-      return this.$store.getters.getAllPromoAds
+      return this.$store.getters.allPromoAds
     }
   }
 }

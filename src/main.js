@@ -2,8 +2,10 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import firebase from 'firebase'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+import {firebaseConfig} from './config'
 
 Vue.use(Vuetify)
 
@@ -15,5 +17,8 @@ new Vue({
   router,
   store,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  created () {
+    firebase.initializeApp(firebaseConfig)
+  }
 })
