@@ -29,11 +29,35 @@ export default {
         commit('setError', error.message)
         throw error
       }
+    },
+    async loginUser ({commit}, {email, password}) {
+      commit('clearError')
+      commit('setLoading', true)
+
+      try {
+        const user = await firebase.auth().signInWithEmailAndPassword(email, password)
+        commit('setUser', new User(user.uid))
+        commit('setLoading', false)
+      } catch (error) {
+        commit('setLoading', false)
+        commit('setError', error.message)
+        throw error
+      }
+    },
+    autoLogin ({commit}, payload) {
+      commit('setUser', new User(payload.uid))
+    },
+    logout ({commit}) {
+      firebase.auth().signOut()
+      commit('setUser', null)
     }
   },
   getters: {
     user (state) {
       return state.user
+    },
+    isAuth (state) {
+      return state.user !== null
     }
   }
 }

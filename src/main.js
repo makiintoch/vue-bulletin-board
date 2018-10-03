@@ -20,5 +20,11 @@ new Vue({
   template: '<App/>',
   created () {
     firebase.initializeApp(firebaseConfig)
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.$store.dispatch('autoLogin', user)
+      }
+    })
   }
 })
