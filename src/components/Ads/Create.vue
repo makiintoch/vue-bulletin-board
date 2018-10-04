@@ -53,8 +53,9 @@
           <v-flex xs12>
             <v-btn 
               class="success"
+              :loading="loading"
+              :disabled="!valid || loading"
               @click="createAd"
-              :disabled="!valid"
             >Submit</v-btn>
           </v-flex>
         </v-layout>
@@ -73,6 +74,11 @@ export default {
       valid: false
     }
   },
+  computed: {
+    loading () {
+      return this.$store.getters.loading
+    }
+  },
   methods: {
     createAd () {
       if (this.$refs.form.validate()) {
@@ -84,6 +90,10 @@ export default {
         }
 
         this.$store.dispatch('create', ad)
+        .then(() => {
+          this.$router.push('/list')
+        })
+        .catch(() => {})
       }
     }
   }
