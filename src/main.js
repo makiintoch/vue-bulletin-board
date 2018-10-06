@@ -6,9 +6,10 @@ import firebase from 'firebase'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import {firebaseConfig} from './config'
+import BuyModal from '@/components/Common/BuyModal'
 
 Vue.use(Vuetify)
-
+Vue.component('buy-modal', BuyModal)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
