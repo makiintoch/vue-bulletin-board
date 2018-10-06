@@ -1,10 +1,10 @@
 <template>
   <v-container>
-    <v-layout row>
+    <v-layout row v-if="!loading && ads.length !== 0">
       <v-flex xs12 sm6 offset-sm3>
         <h1 class="text-secondary mb-3">List ads</h1>
 
-        <v-card 
+        <v-card
           class="elevation-10 mb-3"
           v-for="item in ads"
           :key="item.id"
@@ -34,6 +34,16 @@
         </v-card>
       </v-flex>
     </v-layout>
+    <div v-else-if="!loading && ads.length === 0" class="pt-5 text-xs-center">
+      <h2>You don't have ads</h2>
+    </div>
+    <div v-else>
+      <v-progress-circular
+        indeterminate
+        :size="125"
+        :width="5"
+      ></v-progress-circular>
+    </div>
   </v-container>
 </template>
 
@@ -42,6 +52,9 @@ export default {
   computed: {
     ads () {
       return this.$store.getters.myAds
+    },
+    loading () {
+      return this.$store.getters.loading
     }
   }
 }
