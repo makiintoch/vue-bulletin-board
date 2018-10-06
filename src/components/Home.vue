@@ -41,7 +41,7 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn flat :to="`/ad/${item.id}`">Show</v-btn>
+              <v-btn class="mr-3" flat :to="`/ad/${item.id}`">Show</v-btn>
               <buy-modal :ad="item"></buy-modal>
             </v-card-actions>
           </v-card>

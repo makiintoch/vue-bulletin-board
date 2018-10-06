@@ -15,7 +15,7 @@ export default {
     orders: []
   },
   mutations: {
-    loadOrder (state, payload) {
+    loadOrders (state, payload) {
       state.orders = payload
     }
   },
@@ -29,7 +29,53 @@ export default {
       } catch (error) {
         commit('setError', error.message)
       }
+    },
+    async fetchOrders ({commit, getters}) {
+      commit('clearError')
+      commit('setLoading', true)
+
+      const resultOrders = []
+
+      try {
+        const fbVal = await firebase.database().ref(`/users/${getters.user.id}/orders`).once('value')
+        const orders = fbVal.val()
+
+        Object.keys(orders).forEach(key => {
+          const order = orders[key]
+          resultOrders.push(
+            new Order(order.name, order.phone, order.adId, order.done, key)
+          )
+        })
+
+        commit('loadOrders', resultOrders)
+        commit('setLoading', false)
+      } catch (error) {
+        commit('setLoading', false)
+        commit('setError', error.message)
+      }
+    },
+    async markOrderDone ({commit, getters}, payload) {
+      commit('clearError')
+
+      try {
+        await firebase.database().ref(`/users/${getters.user.id}/orders`).child(payload).update({
+          done: true
+        })
+      } catch (error) {
+        commit('setError', error.message)
+        throw error
+      }
     }
   },
-  getters: {}
+  getters: {
+    doneOrders (state) {
+      return state.orders.filter(item => item.done)
+    },
+    notDoneOrders (state, getters) {
+      return state.orders.filter(item => !item.done)
+    },
+    orders (state, getters) {
+      return getters.notDoneOrders.concat(getters.doneOrders)
+    }
+  }
 }
