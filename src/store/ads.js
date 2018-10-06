@@ -28,20 +28,28 @@ export default {
       commit('clearError')
       commit('setLoading', true)
 
+      const image = payload.image
+
       try {
         const ad = new Ad(
           payload.title,
           payload.description,
           getters.user.id,
-          payload.src,
+          '',
           payload.promo
         )
 
+        const imageExt = image.name.slice(image.name.lastIndexOf('.'))
         const fbAd = await firebase.database().ref('ads').push(ad)
+        const fileData = await firebase.storage().ref(`ads/${fbAd.key}.${imageExt}`).put(image)
+        const src = await firebase.storage().ref().child(fileData.ref.fullPath).getDownloadURL()
+        await firebase.database().ref('ads').child(fbAd.key).update({src})
+
         commit('setLoading', false)
         commit('create', {
           ...ad,
-          id: fbAd.key
+          id: fbAd.key,
+          src
         })
       } catch (error) {
         commit('setError', error.message)
@@ -58,7 +66,6 @@ export default {
       try {
         const fbVal = await firebase.database().ref('ads').once('value')
         const ads = fbVal.val()
-        console.log(ads)
         Object.keys(ads).forEach(key => {
           const ad = ads[key]
           resultAds.push(new Ad(

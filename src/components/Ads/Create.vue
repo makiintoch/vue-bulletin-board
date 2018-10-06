@@ -38,15 +38,23 @@
             <v-btn
               color="blue-grey"
               class="white--text"
+              @click="triggerUpload"
             >
               Upload image
               <v-icon right dark>cloud_upload</v-icon>
             </v-btn>
+            <input 
+              ref="fileInput" 
+              type="file" 
+              v-show="false" 
+              accept="image/*"
+              @change="onFileChange"
+            >
           </v-flex>
         </v-layout>
         <v-layout row>
           <v-flex xs12>
-            <img src="" height="100">
+            <img :src="src" height="100" v-if="src">
           </v-flex>
         </v-layout>
         <v-layout row>
@@ -54,7 +62,7 @@
             <v-btn 
               class="success"
               :loading="loading"
-              :disabled="!valid || loading"
+              :disabled="!valid || !image || loading"
               @click="createAd"
             >Submit</v-btn>
           </v-flex>
@@ -71,7 +79,9 @@ export default {
       title: '',
       description: '',
       promo: false,
-      valid: false
+      valid: false,
+      image: null,
+      src: ''
     }
   },
   computed: {
@@ -81,11 +91,11 @@ export default {
   },
   methods: {
     createAd () {
-      if (this.$refs.form.validate()) {
+      if (this.$refs.form.validate() && this.image) {
         const ad = {
           title: this.title,
           description: this.description,
-          src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
+          image: this.image,
           promo: this.promo
         }
 
@@ -95,6 +105,19 @@ export default {
         })
         .catch(() => {})
       }
+    },
+    triggerUpload () {
+      this.$refs.fileInput.click()
+    },
+    onFileChange (event) {
+      const file = event.target.files[0]
+
+      const reader = new FileReader()
+      reader.onload = e => {
+        this.src = reader.result
+      }
+      reader.readAsDataURL(file)
+      this.image = file
     }
   }
 }
